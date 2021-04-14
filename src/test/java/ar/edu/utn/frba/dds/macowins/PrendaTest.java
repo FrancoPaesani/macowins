@@ -79,6 +79,18 @@ public class PrendaTest {
   }
 
   @Test
+  public void VentaSinPrendasGenerarExcepcion() {
+    Venta venta = new Venta(efectivo(),fecha13Abril());
+    try{
+      venta.calcularTotal();
+    }
+    catch (VentaSinPrendasException programException){
+      assertTrue(programException.getMessage().contains(
+          "La venta no posee prendas asociadas. Agregue al menos una prenda para generar la venta"));
+    }
+  }
+
+  @Test
   public void compro2SacosEnLiquidacionConBBVA3Cuotas() {
     Tarjeta bbva = bbva3Cuotas();
     LocalDate fecha = fecha13Abril();

@@ -35,7 +35,11 @@ public class Venta {
   }
 
   public void calcularTotal() {
+    if(this.prendasVendidas.size() > 0)
     this.totalVenta = calcularSubTotal() + this.tipoPago.calcularRecargo();
+    else
+      throw new VentaSinPrendasException(
+          "La venta no posee prendas asociadas. Agregue al menos una prenda para generar la venta");
   }
 
   public double getTotalVenta() { return totalVenta; }
