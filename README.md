@@ -4,6 +4,9 @@ Solución (Diagrama de Clases)
 ===========
 <img src="https://github.com/FrancoPaesani/macowins/blob/master/MacoWins.jpeg"></img>
 
+Se prefirió modelar varias clases que hereden de Estado y no varias clases del estilo "PrendaNueva, PrendaEnPromoción,..." para que sea más simple de utilizar en caso
+de querer cambiar el estado de una prenda.
+
 
 Enunciado
 ===========
