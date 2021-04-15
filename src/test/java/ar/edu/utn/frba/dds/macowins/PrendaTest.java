@@ -114,23 +114,32 @@ public class PrendaTest {
     registro.registrarVenta(venta);
   }
 
+  private Nueva nueva() {
+    return new Nueva();
+  }
+  private EnLiquidacion liquidacion() {
+    return new EnLiquidacion();
+  }
+  private EnPromocion promocion(int descuento) {
+    return new EnPromocion((double) descuento);
+  }
   private LocalDate fecha13Abril() {
     LocalDate fecha = LocalDate.of(2021, Month.APRIL, 13);
     return fecha;
   }
 
-  private PrendaEnPromocion pantalonEnPromocion(int precioBase, int descuento) {
-    PrendaEnPromocion prenda = new PrendaEnPromocion((double) precioBase,"PANTALON",descuento);
+  private Prenda pantalonEnPromocion(int precioBase, int descuento) {
+    Prenda prenda = new Prenda((double) precioBase,"PANTALON",promocion(descuento));
     return prenda;
   }
 
   private Prenda camisaNueva(double precioBase) {
-    PrendaNueva prenda = new PrendaNueva(precioBase, "CAMISA");
+    Prenda prenda = new Prenda(precioBase, "CAMISA", nueva());
     return prenda;
   }
 
   private Prenda sacoEnLiquidacion(double precioBase) {
-    PrendaEnLiquidacion prenda = new PrendaEnLiquidacion(precioBase, "SACO");
+    Prenda prenda = new Prenda(precioBase, "SACO", liquidacion());
     return prenda;
   }
 
