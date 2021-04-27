@@ -2,7 +2,7 @@ package ar.edu.utn.frba.dds.macowins;
 
 import ar.edu.utn.frba.dds.macowins.Estado;
 
-public class EnPromocion extends Estado {
+public class EnPromocion implements Estado {
   public double descuento;
 
   public EnPromocion(double descuento) {

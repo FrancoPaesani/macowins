@@ -4,10 +4,10 @@ import java.util.Optional;
 
 public class Prenda {
   public double precioDeLista;
-  public String tipo;
+  public TipoPrenda tipo;
   public Estado estado;
 
-  public Prenda(double precioDeLista, String tipo, Estado estado) {
+  public Prenda(double precioDeLista, TipoPrenda tipo, Estado estado) {
     this.precioDeLista = precioDeLista;
     this.tipo = tipo;
     this.estado = estado;
@@ -19,6 +19,7 @@ public class Prenda {
     return estado.precio(this.precioDeLista);
   }
   public String getTipo(){
-    return tipo;
+    return this.tipo.name();
   }
 }
+

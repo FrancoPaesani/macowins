@@ -39,7 +39,7 @@ public class PrendaTest {
 
   @Test
   public void agregoDosElementosALaLista() {
-    Venta venta = new Venta(null,null);
+    VentaEfectivo venta = new VentaEfectivo(null);
     venta.agregarPrendaAVenta(pantalonEnPromocion(1500, 100),2);
     venta.agregarPrendaAVenta(camisaNueva(4000),1);
     assertEquals(venta.prendasVendidas.size(), 2, 0);
@@ -47,7 +47,7 @@ public class PrendaTest {
 
   @Test
   public void laFechaCamisaNuevaEsFecha13042021() {
-    Venta venta = new Venta(null, fecha13Abril());
+    VentaEfectivo venta = new VentaEfectivo(fecha13Abril());
     venta.agregarPrendaAVenta(camisaNueva(4000),1);
     LocalDate fecha = LocalDate.of(2021, Month.APRIL, 13);
     assertEquals(venta.fecha.toString(),"2021-04-13");
@@ -55,7 +55,7 @@ public class PrendaTest {
 
   @Test
   public void vendoDosSacosEnPromocionIgualesValorEsElValorDeUnSaco() {
-    Venta venta = new Venta(efectivo(),null);
+    VentaEfectivo venta = new VentaEfectivo(null);
     venta.agregarPrendaAVenta(sacoEnLiquidacion(2000),1);
     venta.agregarPrendaAVenta(sacoEnLiquidacion(2000),1);
     venta.calcularTotal();
@@ -67,8 +67,8 @@ public class PrendaTest {
   public void RegistroDosVentasDeTresMilGananciaFechaSeisMil() {
     LocalDate fecha = fecha13Abril();
     Registro registro = new Registro();
-    Venta venta1 = new Venta(efectivo(), fecha);
-    Venta venta2 = new Venta(efectivo(), fecha);
+    VentaEfectivo venta1 = new VentaEfectivo(fecha);
+    VentaEfectivo venta2 = new VentaEfectivo(fecha);
     venta1.agregarPrendaAVenta(camisaNueva(3000),1);
     registro.registrarVenta(venta1);
     venta2.agregarPrendaAVenta(camisaNueva(3000),1);
@@ -80,7 +80,7 @@ public class PrendaTest {
 
   @Test
   public void VentaSinPrendasGenerarExcepcion() {
-    Venta venta = new Venta(efectivo(),fecha13Abril());
+    VentaEfectivo venta = new VentaEfectivo(fecha13Abril());
     try{
       venta.calcularTotal();
     }
@@ -91,26 +91,13 @@ public class PrendaTest {
   }
 
   @Test
-  public void compro2SacosEnLiquidacionConBBVA3Cuotas() {
-    Tarjeta bbva = bbva3Cuotas();
+  public void compro2SacosEnLiquidacionEn3Cuotas() {
     LocalDate fecha = fecha13Abril();
     Registro registro = new Registro();
-    Venta venta = new Venta(bbva,fecha);
+    VentaConTarjeta venta = new VentaConTarjeta(fecha, 3, 5);
     venta.agregarPrendaAVenta(sacoEnLiquidacion(2000),2);
     venta.calcularTotal();
     assertEquals(venta.getTotalVenta(), 1000 + 1000 + 10 + 10 + 3*5,0);
-    registro.registrarVenta(venta);
-  }
-
-  @Test
-  public void compro2PantalonesEnPromocionNacion12EsIgualA() {
-    Tarjeta nacion = nacion12Cuotas();
-    LocalDate fecha = fecha13Abril();
-    Registro registro = new Registro();
-    Venta venta = new Venta(nacion,fecha);
-    venta.agregarPrendaAVenta(pantalonEnPromocion(4500,500),2);
-    venta.calcularTotal();
-    assertEquals(venta.getTotalVenta(), 4000 + 4000 + 40 + 40 + 12*3,0);
     registro.registrarVenta(venta);
   }
 
@@ -129,32 +116,27 @@ public class PrendaTest {
   }
 
   private Prenda pantalonEnPromocion(int precioBase, int descuento) {
-    Prenda prenda = new Prenda((double) precioBase,"PANTALON",promocion(descuento));
+    Prenda prenda = new Prenda((double) precioBase,pantalon(),promocion(descuento));
     return prenda;
   }
 
   private Prenda camisaNueva(double precioBase) {
-    Prenda prenda = new Prenda(precioBase, "CAMISA", nueva());
+    Prenda prenda = new Prenda(precioBase, camisa(), nueva());
     return prenda;
   }
 
   private Prenda sacoEnLiquidacion(double precioBase) {
-    Prenda prenda = new Prenda(precioBase, "SACO", liquidacion());
+    Prenda prenda = new Prenda(precioBase, saco(), liquidacion());
     return prenda;
   }
 
-  private Efectivo efectivo() {
-    return new Efectivo();
+  private TipoPrenda saco() {
+    return TipoPrenda.SACO;
   }
-
-  private Tarjeta bbva3Cuotas() {
-    Tarjeta bbva3Cuotas = new Tarjeta(3,5);
-    return bbva3Cuotas;
+  private TipoPrenda camisa() {
+    return TipoPrenda.CAMISA;
   }
-
-  private Tarjeta nacion12Cuotas() {
-    Tarjeta nacion12Cuotas = new Tarjeta(12,3);
-    return nacion12Cuotas;
+  private TipoPrenda pantalon() {
+    return TipoPrenda.PANTALON;
   }
-
 }

@@ -8,35 +8,21 @@ import java.util.HashMap;
 import java.util.stream.Stream;
 
 public class Venta {
-  public Map<Prenda,Integer> prendasVendidas = new HashMap<>();
+  public ArrayList<ItemVenta> prendasVendidas = new ArrayList<>();
   public LocalDate fecha;
-  public TipoPago tipoPago;
-  private double totalVenta;
+  protected double totalVenta;
 
-  public Venta(TipoPago tipoPago, LocalDate fecha) {
-    this.tipoPago = tipoPago;
+  public Venta(LocalDate fecha) {
     this.fecha = fecha;
   }
 
   public void agregarPrendaAVenta(Prenda prenda, Integer cantidad) {
-    if(prendasVendidas.containsKey(prenda)) {
-      Integer previo = prendasVendidas.get(prenda);
-      prendasVendidas.put(prenda,previo + cantidad);
-    }else{
-      prendasVendidas.put(prenda, cantidad); }
-  }
-
-  public double calcularSubTotal() {
-    double subtotal = 0;
-    for(Map.Entry<Prenda, Integer> entry : prendasVendidas.entrySet()) {
-      subtotal += entry.getValue() * entry.getKey().precio() + this.tipoPago.recargoPorPrenda(entry.getKey()) * entry.getValue() ;
-    }
-    return subtotal;
+    prendasVendidas.add(new ItemVenta(prenda,cantidad));
   }
 
   public void calcularTotal() {
-    if(this.prendasVendidas.size() > 0)
-    this.totalVenta = calcularSubTotal() + this.tipoPago.calcularRecargo();
+    if(prendasVendidas.size() > 0)
+      this.totalVenta = prendasVendidas.stream().mapToDouble(item -> item.cantidad * item.prenda.precio()).sum();
     else
       throw new VentaSinPrendasException(
           "La venta no posee prendas asociadas. Agregue al menos una prenda para generar la venta");
@@ -45,34 +31,12 @@ public class Venta {
   public double getTotalVenta() { return totalVenta; }
 }
 
-class TipoPago {
-  public double calcularRecargo() {
-    return 0;
-  }
-  public double recargoPorPrenda(Prenda prenda){ return 0; }
-}
+class ItemVenta{
+  public Prenda prenda;
+  public int cantidad;
 
-class Efectivo extends TipoPago {
-  public double calcularRecargo() { return 0; }
-  public double recargoPorPrenda(Prenda prenda){ return 0; }
-}
-
-class Tarjeta extends TipoPago {
-  private int cantidadCuotas;
-  private double coeficienteFijo;
-
-  public Tarjeta(int cantidadCuotas, double coeficienteFijo) {
-    this.cantidadCuotas = cantidadCuotas;
-    this.coeficienteFijo = coeficienteFijo;
-  }
-
-  public void Tarjeta(int cantidadCuotas) {
-    this.cantidadCuotas = cantidadCuotas;
-  }
-
-  public double calcularRecargo() { return cantidadCuotas * coeficienteFijo; }
-
-  public double recargoPorPrenda(Prenda prenda) {
-    return prenda.precio() * 0.01;
+  public ItemVenta(Prenda prenda, int cantidad) {
+    this.prenda = prenda;
+    this.cantidad = cantidad;
   }
 }
